@@ -4,7 +4,6 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-    id("com.diffplug.spotless")
     id("dagger.hilt.android.plugin")
     id("androidx.navigation.safeargs")
 }
@@ -41,7 +40,12 @@ android {
 
     kotlinOptions { jvmTarget = "1.8" }
 
-    buildFeatures { viewBinding = true }
+    buildFeatures {
+        viewBinding = true
+        compose = true
+    }
+
+    composeOptions { kotlinCompilerExtensionVersion = "1.3.0-rc01" }
 
     packagingOptions {
         resources {
@@ -55,30 +59,6 @@ android {
     }
 }
 
-spotless {
-    kotlin {
-        ktfmt().kotlinlangStyle()
-        target("**/*.kt")
-        targetExclude("**/build/")
-        trimTrailingWhitespace()
-        endWithNewline()
-    }
-
-    kotlinGradle {
-        ktfmt().kotlinlangStyle()
-        target("**/*.gradle.kts")
-        targetExclude("**/build/")
-    }
-
-    format("xml") {
-        target("**/*.xml")
-        targetExclude("**/build/", ".idea/")
-        trimTrailingWhitespace()
-        indentWithSpaces()
-        endWithNewline()
-    }
-}
-
 kapt { correctErrorTypes = true }
 
 dependencies {
@@ -88,16 +68,15 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.swiperefreshlayout)
-
     implementation(libs.androidx.lifecycle.ktx)
     implementation(libs.androidx.lifecycle.viewmodel)
-
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
+
+    implementation(libs.bundles.compose)
 
     implementation(libs.google.material)
     implementation(libs.google.dagger.hilt)
